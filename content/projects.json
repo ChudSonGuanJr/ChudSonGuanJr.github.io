@@ -1,0 +1,743 @@
+{
+  "site": {
+    "name": "Callum Beadle (Żochowski)",
+    "alias": "Beadle",
+    "title": "Environment Artist",
+    "statement": "",
+    "artstation": "https://www.artstation.com/kingguan",
+    "email": "",
+    "hero": [
+      {
+        "project": "omen",
+        "image": "highresscreenshot00010.jpg"
+      }
+    ],
+    "about": [
+      "Currently at SludgePipeGames, the indie studio behind Sparedevil, where I look after head and quality control the level environment art.",
+      "Before that I worked at Digital Salmon on real-time projects, from a stylised internal game to a UE5 vehicle experience for Ford™, where I first led a modelling team and helped build its pipeline.",
+      "My work runs from whole playable levels down to the tileable materials inside them, and I enjoy building kits that let a team move fast without losing a consistent style."
+    ],
+    "experience": [
+      {
+        "name": "SludgePipeGames",
+        "detail": "Lead Environment Artist",
+        "years": "Present"
+      },
+      {
+        "name": "Digital Salmon",
+        "detail": "Environment Artist. Art direction on Darkest Fayte, modelling team lead on Ford Explorer™",
+        "years": "From 2021"
+      },
+      {
+        "name": "Freelance",
+        "detail": "Materials for student projects",
+        "years": "2019–2020"
+      },
+      {
+        "name": "University of Hertfordshire",
+        "detail": "Anura and OMEN university projects"
+      }
+    ],
+    "tools": [
+      "Unreal Engine",
+      "Unity",
+      "Maya",
+      "Blender",
+      "Houdini",
+      "ZBrush",
+      "Substance 3D Designer",
+      "Substance 3D Painter",
+      "Photoshop"
+    ],
+    "colors": {
+      "accent": "#ffffff"
+    },
+    "fonts": {
+      "heading": "Manrope"
+    },
+    "doors": {
+      "environment": {
+        "project": "anura",
+        "image": "bossroomshot03.jpg"
+      },
+      "materials": {
+        "project": "materials",
+        "image": "picturefull.jpg"
+      }
+    },
+    "sizes": {}
+  },
+  "projects": [
+    {
+      "slug": "anura",
+      "title": "Anura: The Smuggler's Path",
+      "tagline": "A fully playable Unreal Engine 4 level for an RPG about frogs",
+      "role": "Environment Art and Level Design",
+      "studio": "Second-year university project",
+      "cover": "banditcamp08.jpg",
+      "video": "SkKyKDifK6Y",
+      "video_title": "Anura // RPG Frog Game // Full Trailer",
+      "summary": [
+        "\"The Smuggler's Path\" is my fully playable level from our second-year university project, Anura, created in UE4. It runs through four spaces, each with its own job to do."
+      ],
+      "credits": [
+        {
+          "role": "Characters and barrel",
+          "name": "Daniel Hill"
+        },
+        {
+          "role": "VFX and water",
+          "name": "Sam Mayson"
+        },
+        {
+          "role": "Foliage",
+          "name": "Megascans"
+        }
+      ],
+      "software": [
+        "Unreal Engine",
+        "Maya",
+        "Substance 3D Painter",
+        "Substance 3D Designer",
+        "ZBrush",
+        "Photoshop"
+      ],
+      "sections": [
+        {
+          "title": "Bandit Camp",
+          "source": "https://www.artstation.com/artwork/d80w83",
+          "text": "I had a lot of fun designing this part, especially the pillar centrepiece.",
+          "images": [
+            {
+              "file": "banditcamp08.jpg"
+            },
+            {
+              "file": "banditcamp04.jpg"
+            },
+            {
+              "file": "banditcamp06.jpg"
+            },
+            {
+              "file": "banditcamp01.jpg"
+            }
+          ]
+        },
+        {
+          "title": "Drain Chamber",
+          "source": "https://www.artstation.com/artwork/48XQQ1",
+          "text": "A fun challenge: creating an environmental puzzle to progress, while also making room for a small arena-like area where combat would take place.",
+          "images": [
+            {
+              "file": "drainchamber04.jpg"
+            },
+            {
+              "file": "drainchamber01.jpg"
+            },
+            {
+              "file": "drainchamber06.jpg"
+            },
+            {
+              "file": "drainchamber07.jpg"
+            },
+            {
+              "file": "drainchamber05.jpg"
+            }
+          ]
+        },
+        {
+          "title": "Flooded Hall",
+          "source": "https://www.artstation.com/artwork/q9QzRP",
+          "text": "I wanted to take advantage of the beautiful water material we had and try something different.",
+          "images": [
+            {
+              "file": "floodedroom03.jpg"
+            },
+            {
+              "file": "floodedroom02.jpg"
+            },
+            {
+              "file": "floodedroom01.jpg"
+            },
+            {
+              "file": "floodedroom04.jpg"
+            }
+          ]
+        },
+        {
+          "title": "Boss Room",
+          "source": "https://www.artstation.com/artwork/eaJyBD",
+          "text": "The final section of the level. It had to feel grand, but also storied and lived in, and I wanted it to radiate a sense of danger and hostility.",
+          "images": [
+            {
+              "file": "bossroomshot01.jpg"
+            },
+            {
+              "file": "bossroomshot02.jpg"
+            },
+            {
+              "file": "bossroomshot03.jpg"
+            },
+            {
+              "file": "bossroomshot05.jpg"
+            }
+          ]
+        }
+      ],
+      "section_pages": true
+    },
+    {
+      "slug": "ford-explorer",
+      "title": "Ford Explorer™ CX740S",
+      "tagline": "A real-time, pixel-streamed vehicle experience in Unreal Engine 5",
+      "role": "Vehicle modelling and texturing, modelling team lead",
+      "studio": "Digital Salmon, with Imagination",
+      "cover": "fordexplorer-01.jpg",
+      "summary": [
+        "By far one of my best experiences at Digital Salmon, built in collaboration with Imagination. I was responsible for modelling and texturing this vehicle for a real-time, pixel-streamed experience in UE5 for Ford™.",
+        "I also helped lead the modelling team throughout. It was my first time leading others, and helping to build and then manage a pipeline. It was a tough challenge, and I could not be more proud of what we achieved."
+      ],
+      "software": [
+        "Unreal Engine",
+        "Maya",
+        "Houdini",
+        "Substance 3D Designer",
+        "Substance 3D Painter"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/dyLW6w",
+          "images": [
+            {
+              "file": "fordexplorer-01.jpg"
+            },
+            {
+              "file": "fordexplorer-06-wire.jpg",
+              "compare": "fordexplorer-wirenowindows.jpg"
+            },
+            {
+              "file": "fordexplorer-03.jpg"
+            },
+            {
+              "file": "interior-09.jpg"
+            },
+            {
+              "file": "interior-07.jpg"
+            },
+            {
+              "file": "fordexplorer-05.jpg"
+            },
+            {
+              "file": "interior-08.jpg"
+            },
+            {
+              "file": "media-desert-02.jpg"
+            },
+            {
+              "file": "media-desert.jpg"
+            },
+            {
+              "file": "media-mountain.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "omen",
+      "title": "OMEN",
+      "tagline": "Sculpted props rendered with Nanite in Unreal Engine 5",
+      "role": "Prop sculpting, materials and rendering",
+      "studio": "Final-year university project",
+      "cover": "highresscreenshot00007.jpg",
+      "summary": [
+        "A collection of renders using props I sculpted and designed for my final-year project, taking advantage of UE5's Nanite to maximise the quality of the sculpts.",
+        "I used the project to learn a more cinematic approach to a game engine and to game art in general. One of the models was made in Substance Designer, before Designer's 3D modelling tools existed."
+      ],
+      "software": [
+        "Unreal Engine",
+        "Substance 3D Designer",
+        "Substance 3D Painter",
+        "Maya",
+        "ZBrush",
+        "Photoshop"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/xYN4lr",
+          "images": [
+            {
+              "file": "highresscreenshot00010.jpg"
+            },
+            {
+              "file": "highresscreenshot00007.jpg"
+            },
+            {
+              "file": "highresscreenshot00006.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "turbo-tank",
+      "title": "Turbo Tank",
+      "tagline": "A stylised internal game project",
+      "role": "Environments, level design and kit building",
+      "studio": "Digital Salmon",
+      "cover": "crabtank-02.jpg",
+      "summary": [
+        "An internal game project at Digital Salmon, and a great opportunity for the team to try developing our own game. Stylised art wasn't normally in our wheelhouse, so it was a fun challenge to explore.",
+        "I was responsible for the environments, level design and a kit of structural pieces and props to build out new levels and challenges fast. Houdini proved to be a great tool for this. The project also taught me a lot about optimisation, as we aimed for a stable, high framerate."
+      ],
+      "software": [
+        "Unreal Engine",
+        "Maya",
+        "Houdini",
+        "Substance 3D Painter",
+        "Substance 3D Designer"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/gRPk38",
+          "images": [
+            {
+              "file": "crabtank-02.jpg"
+            },
+            {
+              "file": "crabtank-04.jpg"
+            },
+            {
+              "file": "crabtank-01.jpg"
+            },
+            {
+              "file": "crabtank-03.jpg"
+            },
+            {
+              "file": "crabtank-05.jpg"
+            }
+          ]
+        }
+      ],
+      "thumbnail": "crabtank-05.jpg"
+    },
+    {
+      "slug": "sparedevil",
+      "title": "Sparedevil",
+      "tagline": "Hellish bowling, built on ancient Greek architecture",
+      "role": "Level design and environment art",
+      "studio": "SludgePipeGames",
+      "cover": "splitpit-wide.webp",
+      "summary": [
+        "Sparedevil is our debut FPS, made together at our newly founded indie studio, SludgePipeGames. Three months from initial concept to release, it was a wild ride that taught me so much as an individual and as a team member.",
+        "We chose an economic style, both as a fun creative constraint and to keep a realistic scope for releasing our first game independently on a near non-existent budget. Bowling being the game's theme let us use retro bowling animations as our main inspiration, giving it a quirky style that stayed simple and easy to optimise.",
+        "I was primarily responsible for level design and environment art design, and found a lot of enjoyment in a spin on ancient Greek architecture adapted with hellish bowling motifs and finishes. I also modelled and designed a range of the enemy pins, plus some of the unlockable tileable patterns for the customisation system."
+      ],
+      "software": [
+        "Unreal Engine",
+        "Blender",
+        "Substance 3D Painter",
+        "Substance 3D Designer",
+        "Photoshop"
+      ],
+      "sections": [
+        {
+          "title": "Split Pit",
+          "text": "The game's third map.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "splitpit-wide.webp"
+            },
+            {
+              "file": "splitpit-wide02.webp"
+            },
+            {
+              "file": "splitpit-closeup.webp"
+            }
+          ],
+          "thumbnail": "splitpit-wide-clean.webp"
+        },
+        {
+          "title": "Wheel of Misfortune",
+          "text": "The game's second map.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "wheelofmisfortune-wide.webp"
+            },
+            {
+              "file": "wheelofmisfortune-closeup.webp"
+            },
+            {
+              "file": "wheelofmisfortune-wide02.webp"
+            }
+          ],
+          "thumbnail": "wheelofmisfortune-wide-clean.webp"
+        },
+        {
+          "title": "Hell's Alley",
+          "text": "The game's original debut map.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "basearena-wide.webp"
+            },
+            {
+              "file": "basearena-closeup.webp"
+            }
+          ],
+          "thumbnail": "basearena-wide-clean.webp"
+        },
+        {
+          "title": "Risky Rings",
+          "text": "The game's fourth and most recent map.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "riskyrings-closeup.webp"
+            },
+            {
+              "file": "riskyrings-wide.webp"
+            },
+            {
+              "file": "riskyrings-wide02.webp"
+            }
+          ],
+          "thumbnail": "riskyrings-wide-clean.webp"
+        },
+        {
+          "title": "Asset Kit",
+          "text": "The asset kit built throughout the game's development. It let us build new arenas faster while keeping a consistent architectural style.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "sparedevil-assetknolling.webp"
+            }
+          ]
+        },
+        {
+          "title": "Enemy Pins",
+          "text": "The enemy pins I modelled.",
+          "source": "https://www.artstation.com/artwork/8vwwzO",
+          "images": [
+            {
+              "file": "sparedevil-pinlineup.webp"
+            }
+          ]
+        }
+      ],
+      "section_pages": true,
+      "detail_links": [
+        {
+          "label": "Steam",
+          "text": "Sparedevil on Steam",
+          "url": "https://store.steampowered.com/app/2960500/Sparedevil/"
+        }
+      ]
+    },
+    {
+      "slug": "runaway",
+      "title": "Runaway: Gas Station",
+      "tagline": "A comic book environment for a student film",
+      "role": "Freelance environment artist",
+      "studio": "Final-year film, University of Hertfordshire",
+      "cover": "render-08.jpg",
+      "summary": [
+        "Freelance environment work for a final-year student film at the University of Hertfordshire. I was responsible for everything seen here. We aimed for a comic book style, using Spider-Verse and the Love, Death & Robots short \"The Witness\" as reference."
+      ],
+      "software": [
+        "Substance 3D Painter",
+        "Unreal Engine",
+        "Maya",
+        "Photoshop",
+        "Substance 3D Designer"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/oAlBom",
+          "images": [
+            {
+              "file": "render-03.jpg"
+            },
+            {
+              "file": "render-04.jpg"
+            },
+            {
+              "file": "render-02.jpg"
+            },
+            {
+              "file": "render-06.jpg"
+            },
+            {
+              "file": "render-07.jpg"
+            }
+          ]
+        }
+      ],
+      "thumbnail": "render-03.jpg"
+    },
+    {
+      "slug": "ue-style-study",
+      "title": "UE Style Study",
+      "tagline": "An artwork by Azamat Khairov, recreated in Unreal Engine 5",
+      "role": "Personal study",
+      "studio": "Personal work",
+      "cover": "frenchdoor-ue.jpg",
+      "summary": [
+        "I recently stumbled on the beautiful works of Azamat Khairov and knew I had to try recreating one of the pieces in UE5. It was a fun challenge and good Designer and Painter practice, which is always welcome."
+      ],
+      "credits": [
+        {
+          "role": "Based on \"expectation 3\" by",
+          "name": "Azamat Khairov"
+        }
+      ],
+      "software": [
+        "Unreal Engine",
+        "Blender",
+        "Substance 3D Painter",
+        "Substance 3D Designer"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/BkLlRD",
+          "images": [
+            {
+              "file": "frenchdoor-ue.jpg",
+              "beside": true,
+              "caption": "My recreation in Unreal Engine 5"
+            },
+            {
+              "file": "expectation-3-azamat-khairov.jpg",
+              "caption": "Original artwork: expectation 3 by Azamat Khairov"
+            },
+            {
+              "file": "frenchdoor-timelapse-crop.gif"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "the-trail-ends",
+      "title": "The Trail Ends",
+      "tagline": "A composition, lighting and colour piece",
+      "role": "Project lead, from initial concept to final piece",
+      "studio": "Digital Salmon",
+      "cover": "ds-trailendsimage-02.jpg",
+      "summary": [
+        "An internal project at Digital Salmon, where we were tasked with creating a real-time game art piece. I led it from the initial concept through to working with the team on the end result.",
+        "Almost all assets came from Quixel's Megascans, as the focus was not asset creation but demonstrating art capability in composition, lighting and colour. It really pushed me, and I learnt a lot."
+      ],
+      "credits": [
+        {
+          "role": "Portal VFX",
+          "name": "Sam Mayson"
+        }
+      ],
+      "software": [
+        "Quixel Bridge",
+        "Unreal Engine",
+        "Maya",
+        "ZBrush"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/Ea2WYe",
+          "images": [
+            {
+              "file": "ds-trailendsimage-01.jpg"
+            },
+            {
+              "file": "ds-trailendsimage-02.jpg"
+            },
+            {
+              "file": "ds-trailendsimage-03.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "darkest-fayte",
+      "title": "Darkest Fayte: Sanctum",
+      "tagline": "A modular dungeon kit for an in-house game",
+      "role": "Art direction, environment work and level design",
+      "studio": "Digital Salmon",
+      "cover": "darkestfaytescene.jpg",
+      "summary": [
+        "An in-house game project at Digital Salmon, and a real learning experience. I was responsible for art directing the game, and for all environment work and level design.",
+        "All assets were created in Houdini and textured using Substance Designer. I created a modular environment kit to build expansive dungeons and maps to explore."
+      ],
+      "credits": [
+        {
+          "role": "VFX",
+          "name": "Sam Mayson"
+        },
+        {
+          "role": "Help generating the floor in Houdini",
+          "name": "Benjamin Salmon"
+        }
+      ],
+      "software": [
+        "Houdini",
+        "Unity",
+        "Substance 3D Designer",
+        "Photoshop"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/5BZ09W",
+          "images": [
+            {
+              "file": "darkestfaytescene.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "modular-church",
+      "title": "Modular Church",
+      "tagline": "A Houdini tool for generating modular building pieces",
+      "role": "Tool building and environment art",
+      "studio": "Personal work",
+      "cover": "church04.jpg",
+      "summary": [
+        "Made while learning more about Houdini: a tool to generate modular building pieces. Everything is textured with tileables and rendered in Unreal, with foliage from Megascans."
+      ],
+      "credits": [
+        {
+          "role": "Foliage",
+          "name": "Megascans"
+        }
+      ],
+      "software": [
+        "Houdini",
+        "Unreal Engine"
+      ],
+      "sections": [
+        {
+          "source": "https://www.artstation.com/artwork/kQ43eK",
+          "images": [
+            {
+              "file": "church04.jpg"
+            },
+            {
+              "file": "church03.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "materials",
+      "title": "Materials",
+      "tagline": "Made in Substance 3D Designer and rendered in Maverick",
+      "thumbnail": "thumbnail.jpg",
+      "cover": "freelance-material-page-1.jpg",
+      "summary": [],
+      "software": [],
+      "sections": [
+        {
+          "title": "Anura",
+          "text": "Tileable materials made for the game. I really found a love for Substance Designer on this project, and especially enjoyed tackling a more interesting pattern with the sewer tiles.",
+          "source": "https://www.artstation.com/artwork/28q6AK",
+          "images": [
+            {
+              "file": "material-page-1.jpg",
+              "split": 3
+            },
+            {
+              "file": "material-page-3.jpg",
+              "split": 3
+            },
+            {
+              "file": "material-page-2.jpg",
+              "split": 3
+            }
+          ]
+        },
+        {
+          "title": "Freelance",
+          "text": "Freelance material work for other student projects at my university, including the award-winning Spire and Uplink, alongside personal pieces I'm most proud of. I learnt a lot alongside some very talented artists, and couldn't miss the opportunity to add the legendary companion cube.",
+          "source": "https://www.artstation.com/artwork/B138zm",
+          "images": [
+            {
+              "file": "freelance-material-page-1.jpg",
+              "split": 3
+            },
+            {
+              "file": "freelance-material-page-3.jpg",
+              "split": 3
+            },
+            {
+              "file": "freelance-material-page-4.jpg",
+              "caption": "Uplink satellite environment by Jamie Callow"
+            },
+            {
+              "file": "freelance-material-page-2.jpg",
+              "split": 3
+            }
+          ]
+        },
+        {
+          "title": "Molded Flesh",
+          "text": "Created as freelance work on another student project at my university. They wanted a material they could paint onto characters in Substance Painter and also use around their environments in UE4. Made 100% in Substance Designer and rendered in Maverick. Looking at reference for this was... fun.",
+          "source": "https://www.artstation.com/artwork/Oybaeb",
+          "images": [
+            {
+              "file": "picturefull.jpg",
+              "compare": "picturefullalt.jpg",
+              "labels": [
+                "Flesh",
+                ""
+              ],
+              "phone_fill": true
+            },
+            {
+              "file": "moldedskinmapsv2.jpg",
+              "caption": "Breakdown of maps"
+            },
+            {
+              "file": "picture-close2.jpg",
+              "beside": true
+            },
+            {
+              "file": "picture-close-alt2.jpg",
+              "beside": true
+            },
+            {
+              "file": "pictureclosealt2.jpg",
+              "caption": "Alternative green mould version"
+            }
+          ]
+        },
+        {
+          "title": "Nodevember 2020",
+          "text": "I took part in Nodevember again and although university work meant I couldn't keep up all month, I got a lot further than my first time around and learnt so much more. These are some of my favourite pieces.",
+          "source": "https://www.artstation.com/artwork/q9YBVN",
+          "images": [
+            {
+              "file": "page-2.jpg",
+              "split": 3
+            },
+            {
+              "file": "page-3.jpg",
+              "split": 3
+            },
+            {
+              "file": "page-1.jpg",
+              "split": 3
+            },
+            {
+              "file": "page-4.jpg",
+              "split": 3
+            }
+          ]
+        }
+      ],
+      "nav": true
+    }
+  ]
+}

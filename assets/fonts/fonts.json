@@ -1,0 +1,33 @@
+{
+  "Archivo": {
+    "file": "archivo",
+    "stretch": "62% 125%"
+  },
+  "Inter": {
+    "file": "inter"
+  },
+  "Manrope": {
+    "file": "manrope"
+  },
+  "DM Sans": {
+    "file": "dm-sans"
+  },
+  "Montserrat": {
+    "file": "montserrat"
+  },
+  "Space Grotesk": {
+    "file": "space-grotesk"
+  },
+  "Oswald": {
+    "file": "oswald"
+  },
+  "Roboto Condensed": {
+    "file": "roboto-condensed"
+  },
+  "Playfair Display": {
+    "file": "playfair-display"
+  },
+  "Lora": {
+    "file": "lora"
+  }
+}

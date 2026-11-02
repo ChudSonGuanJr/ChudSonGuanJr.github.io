@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit mode</title>
+<style>
+  :root { --bg: #0b0a0c; --surface: #151317; --raised: #1e1b21; --line: #2b272e; --text: #f1ece6; --muted: #a59e98; --accent: #ff7a2f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; }
+  button, select, input, textarea { font: inherit; color: inherit; }
+  button { border: 1px solid var(--line); background: var(--raised); padding: 5px 10px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  select, input, textarea { width: 100%; border: 1px solid var(--line); background: var(--bg); padding: 6px 8px; }
+  input:focus, textarea:focus, select:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+  textarea { min-height: 80px; resize: vertical; }
+  .sizes { grid-column: 1 / -1; display: grid; gap: 8px; justify-items: start; }
+  .size-row { display: grid; grid-template-columns: 90px 200px 50px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; }
+  .size-row > span { color: var(--muted); font-size: 13px; }
+  .size-row input { padding: 0; }
+  .size-sample { line-height: 1.05; overflow: hidden; white-space: nowrap; }
+  .font-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+  .font-card { display: block; padding: 8px 10px; text-align: left; background: var(--bg); }
+  .font-card small { display: block; margin-bottom: 4px; color: var(--muted); font-size: 12px; }
+  .font-card.is-picked { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .font-sample { display: block; font-size: 20px; line-height: 1.2; overflow-wrap: anywhere; }
+  .field.check { align-self: end; padding-bottom: 6px; }
+  .field.check input { width: auto; margin-right: 6px; }
+  input[type="color"] { height: 36px; padding: 2px; cursor: pointer; }
+  .colors { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; }
+
+  .bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 24px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .bar h1 { margin: 0; font-size: 18px; }
+  #status { flex: 1; min-width: 160px; color: var(--muted); }
+  #status.dirty { color: var(--accent); }
+  #status.error { color: #ff6b6b; }
+  #save { padding: 8px 22px; border: 0; background: var(--accent); color: #140a04; font-weight: 700; }
+  #save:disabled { opacity: .4; cursor: default; }
+  .bar a { color: var(--text); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 20px 24px 80px; }
+  h2 { margin: 28px 0 4px; font-size: 18px; }
+  .hint { margin: 0 0 12px; color: var(--muted); }
+  .heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 16px; }
+  #header-preview { display: block; width: 100%; max-width: 640px; aspect-ratio: 21 / 9; object-fit: cover; background: var(--surface); }
+
+  .door-edit { margin-bottom: 14px; padding: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .door-edit-grid { display: grid; grid-template-columns: minmax(220px, 340px) minmax(0, 1fr); gap: 14px; }
+  .picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; max-height: 214px; overflow-y: auto; align-content: start; }
+  .pick-image { padding: 0; border: 2px solid transparent; background: none; }
+  .pick-image.is-picked { border-color: var(--accent); }
+  .pick-image img { display: block; width: 100%; height: 60px; object-fit: cover; }
+
+  .look { position: relative; overflow: hidden; container-type: inline-size; background: #000; }
+  .look img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .look::after { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--site-bg, #0b0a0c) var(--tint, 45%), transparent); }
+  .look span { position: absolute; z-index: 1; inset: 0; display: grid; place-items: center; padding: 6px; text-align: center; font-weight: 800; font-stretch: 78%; text-transform: uppercase; color: var(--site-heading, #f1ece6); }
+  .look.door-look { aspect-ratio: 16 / 10; }
+  .look.door-look span { font-size: 9cqw; }
+  .look.banner-look { aspect-ratio: 19 / 4; --tint: 62%; }
+  .look.banner-look span { font-size: 6cqw; }
+  .look.tile-look { aspect-ratio: 1; }
+  .look.tile-look::after, .look.tile-look span { display: none; }
+  #hover-preview { position: fixed; z-index: 9; right: 16px; bottom: 16px; width: min(560px, calc(100vw - 32px)); padding: 8px; border: 1px solid var(--muted); background: var(--bg); box-shadow: 0 6px 24px #000; pointer-events: none; }
+  #hover-preview.small { width: 260px; }
+  #hover-preview[hidden] { display: none; }
+  #hover-preview p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+
+  .panel { padding: 14px; border: 1px solid var(--line); background: var(--surface); }
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px 14px; }
+  .field { display: block; }
+  .field > span { display: block; margin-bottom: 3px; color: var(--muted); font-size: 13px; }
+  .field.wide { grid-column: 1 / -1; }
+  .rows { grid-column: 1 / -1; }
+  .rows h4 { margin: 4px 0; color: var(--muted); font-size: 13px; font-weight: 400; }
+  .rows .item { display: flex; gap: 6px; margin-bottom: 6px; }
+  .rows .item button { flex: none; }
+  .rows .add { margin-top: 2px; }
+
+  .project { margin-bottom: 8px; border: 1px solid var(--line); background: var(--surface); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px; cursor: grab; }
+  .row img { width: 54px; height: 54px; object-fit: cover; background: #000; }
+  .row .number { width: 24px; text-align: right; color: var(--muted); }
+  .row .name { flex: 1; min-width: 140px; font-weight: 600; }
+  .row .meta { color: var(--muted); }
+  .row a { color: var(--muted); font-size: 14px; }
+  .drop-before { box-shadow: 0 -3px 0 var(--accent); }
+  .drop-after { box-shadow: 0 3px 0 var(--accent); }
+  .tile.drop-before { box-shadow: -3px 0 0 var(--accent); }
+  .tile.drop-after { box-shadow: 3px 0 0 var(--accent); }
+  .dragging { opacity: .4; }
+
+  .details { padding: 12px; border-top: 1px solid var(--line); }
+  .section-block { margin-top: 14px; padding: 10px; border: 1px solid var(--line); background: var(--bg); }
+  .section-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .section-head .grip { padding: 4px 8px; color: var(--muted); cursor: grab; user-select: none; }
+  .section-head strong { flex: 1; }
+  .section-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+  .pick { display: inline-block; padding: 5px 10px; border: 1px solid var(--line); background: var(--raised); cursor: pointer; }
+  .pick:hover { border-color: var(--muted); }
+  .pick input { display: none; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; min-height: 50px; margin-top: 10px; }
+  .tiles.file-over { outline: 2px dashed var(--accent); }
+  .tile { background: var(--surface); }
+  .tile .grab { cursor: grab; }
+  .tile img { display: block; width: 100%; height: 120px; object-fit: cover; pointer-events: none; }
+  .tile .actions { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; }
+  .tile .actions button { flex: 1; padding: 2px 4px; font-size: 13px; }
+  .tile .actions .remove { flex: 0 0 30px; }
+  .tile .extra { display: grid; gap: 4px; padding: 0 4px 4px; }
+  .tile .extra input, .tile .extra select { padding: 3px 6px; font-size: 13px; }
+  .tile.is-split .set-split, .tile.is-section .set-section, .tile.is-side .set-side, .tile.is-paired .set-pair, .tile.is-banner .set-banner, .tile.is-tile .set-tile, .tile.is-header .set-header { background: var(--accent); border-color: var(--accent); color: #140a04; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>Edit mode</h1>
+  <span id="status" role="status">Loading…</span>
+  <a href="/index.html" target="_blank" rel="noopener">View site</a>
+  <button id="save" type="button" disabled>Save</button>
+</div>
+<main>
+  <h2>Header image</h2>
+  <p class="hint">Open a project below and press Header on any image.</p>
+  <img id="header-preview" alt="Current header image">
+
+  <h2>Home page buttons</h2>
+  <p class="hint">Hover an image to preview it on the button, then click to choose it.</p>
+  <div id="doors"></div>
+
+  <h2>Site details</h2>
+  <p class="hint">Colours and fonts apply by role across every page. Blank lines split paragraphs in the About text. Fill in Email to show a mail button under the About text.</p>
+  <div class="panel"><div id="site" class="fields"></div></div>
+
+  <div class="heading">
+    <div>
+      <h2>Environments</h2>
+      <p class="hint">The projects on the Environments page. Drag rows, ⠿ sections and images to reorder. Drop image files onto a section to upload them. Reload before saving to undo everything.</p>
+    </div>
+    <button id="add-project" type="button">Add project</button>
+  </div>
+  <div id="projects"></div>
+
+  <h2>Separate pages</h2>
+  <p class="hint">Pages with their own top bar link and home page button, such as Materials. Tick "Separate page" in any project to move it here.</p>
+  <div id="pages"></div>
+</main>
+<div id="hover-preview" hidden></div>
+
+<script>
+  const statusEl = document.getElementById("status");
+  const saveButton = document.getElementById("save");
+  const list = document.getElementById("projects");
+  const pages = document.getElementById("pages");
+  const open = new Set();
+  const COLORS = [["bg", "Background", "#0b0a0c"], ["heading", "Headings", "#f1ece6"], ["text", "Body text", "#f1ece6"], ["muted", "Secondary text", "#a59e98"], ["accent", "Accent", "#ff7a2f"]];
+  let data, fonts = {}, version = "", dragged = null, dirty = false;
+
+  const url = (slug, file) => `/assets/img/${slug}/${file}`;
+  const thumb = (slug, file) => file.endsWith(".gif") ? url(slug, file) : `/assets/img/${slug}/thumbs/${file.replace(/\.\w+$/, ".webp")}`;
+
+  function setStatus(text, kind = "") {
+    statusEl.textContent = text;
+    statusEl.className = kind;
+  }
+
+  // Text edits only mark the page dirty, so typing never loses focus.
+  function touched() {
+    dirty = true;
+    saveButton.disabled = false;
+    setStatus("Unsaved changes", "dirty");
+  }
+
+  function changed() {
+    touched();
+    render();
+  }
+
+  function el(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    Object.assign(node, props);
+    node.append(...children);
+    return node;
+  }
+
+  function image(slug, file) {
+    const img = el("img", { src: thumb(slug, file), alt: "", loading: "lazy" });
+    img.onerror = () => { img.onerror = null; img.src = url(slug, file); };
+    return img;
+  }
+
+  function look(kind, label, slug, file) {
+    const node = el("div", { className: `look ${kind}-look` });
+    const picture = el("img", { src: thumb(slug, file), alt: "" });
+    picture.onerror = () => { picture.onerror = null; picture.src = url(slug, file); };
+    const text = el("span", { textContent: label });
+    const fonts = data.site.fonts || {};
+    text.style.fontFamily = `"${fonts.heading || "Archivo"}"`;
+    const colors = data.site.colors || {};
+    if (colors.bg) node.style.setProperty("--site-bg", colors.bg);
+    if (colors.heading) node.style.setProperty("--site-heading", colors.heading);
+    node.append(picture, text);
+    return node;
+  }
+
+  // Shows how an image will appear on the site while a button is hovered.
+  function withPreview(target, kind, title, label, slug, file) {
+    const box = document.getElementById("hover-preview");
+    target.addEventListener("mouseenter", () => {
+      box.className = kind === "tile" ? "small" : "";
+      box.replaceChildren(el("p", { textContent: title }), look(kind, label, slug, file));
+      box.hidden = false;
+    });
+    target.addEventListener("mouseleave", () => { box.hidden = true; });
+    return target;
+  }
+
+  function button(text, className, action) {
+    const b = el("button", { type: "button", textContent: text, className });
+    b.addEventListener("click", (event) => { event.stopPropagation(); action(); });
+    return b;
+  }
+
+  // A text, long text, paragraph or comma list field bound to obj[key].
+  function field(obj, key, label, { kind = "text", wide = false, placeholder = "", list: datalist = "" } = {}) {
+    const read = () => {
+      if (kind === "paragraphs") return (obj[key] || []).join("\n\n");
+      if (kind === "comma") return (obj[key] || []).join(", ");
+      return obj[key] || "";
+    };
+    const write = (value) => {
+      if (kind === "paragraphs") obj[key] = value.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+      else if (kind === "comma") obj[key] = value.split(",").map((p) => p.trim()).filter(Boolean);
+      else obj[key] = value;
+      touched();
+    };
+    const input = kind === "text" ? el("input", { placeholder }) : el("textarea", { placeholder });
+    if (datalist) input.setAttribute("list", datalist);
+    input.value = read();
+    input.addEventListener("input", () => write(input.value));
+    return el("label", { className: `field${wide || kind !== "text" ? " wide" : ""}` }, el("span", { textContent: label }), input);
+  }
+
+  // Editable list of small records, such as credits or experience.
+  function rows(owner, key, label, columns) {
+    const box = el("div", { className: "rows" });
+    const draw = () => {
+      const items = owner[key] || (owner[key] = []);
+      box.replaceChildren(el("h4", { textContent: label }));
+      items.forEach((item, i) => {
+        const line = el("div", { className: "item" });
+        columns.forEach(([name, placeholder]) => {
+          const input = el("input", { placeholder, value: item[name] || "" });
+          input.setAttribute("aria-label", placeholder);
+          input.addEventListener("input", () => { item[name] = input.value; touched(); });
+          line.append(input);
+        });
+        line.append(
+          button("▲", "", () => { if (i) { items.splice(i - 1, 0, items.splice(i, 1)[0]); touched(); draw(); } }),
+          button("✕", "", () => { items.splice(i, 1); touched(); draw(); })
+        );
+        box.append(line);
+      });
+      box.append(button(`Add ${label.toLowerCase().replace(/s$/, "")}`, "add", () => { items.push({}); touched(); draw(); }));
+    };
+    draw();
+    return box;
+  }
+
+  function isAfter(event, node, horizontal) {
+    const r = node.getBoundingClientRect();
+    return horizontal ? event.clientX > r.left + r.width / 2 : event.clientY > r.top + r.height / 2;
+  }
+
+  function clearMarks() {
+    document.querySelectorAll(".drop-before, .drop-after").forEach((n) => n.classList.remove("drop-before", "drop-after"));
+  }
+
+  // Only the handle is draggable, so text inside a project can still be selected.
+  function draggable(handle, payload, visual = handle) {
+    handle.draggable = true;
+    handle.addEventListener("dragstart", (event) => {
+      event.stopPropagation();
+      dragged = payload;
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", "");
+      visual.classList.add("dragging");
+    });
+    handle.addEventListener("dragend", () => { visual.classList.remove("dragging"); clearMarks(); dragged = null; });
+  }
+
+  function dropTarget(node, accepts, horizontal, drop) {
+    node.addEventListener("dragover", (event) => {
+      if (!dragged || !accepts(dragged)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      clearMarks();
+      node.classList.add(isAfter(event, node, horizontal) ? "drop-after" : "drop-before");
+    });
+    node.addEventListener("drop", (event) => {
+      if (!dragged || !accepts(dragged)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const after = isAfter(event, node, horizontal);
+      clearMarks();
+      drop(after);
+    });
+  }
+
+  function move(from, item, to, target, after) {
+    from.splice(from.indexOf(item), 1);
+    to.splice(target ? to.indexOf(target) + (after ? 1 : 0) : to.length, 0, item);
+    changed();
+  }
+
+  async function post(path, body, headers = {}) {
+    const response = await fetch(path, { method: "POST", body, headers });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    return result;
+  }
+
+  async function uploadFile(project, file) {
+    const query = new URLSearchParams({ project: project.slug, name: file.name });
+    return (await post(`/api/upload?${query}`, file)).file;
+  }
+
+  async function addImages(project, section, files) {
+    const images = [...files].filter((f) => f.type.startsWith("image/"));
+    if (!images.length) return;
+    setStatus(`Uploading ${images.length} image${images.length > 1 ? "s" : ""}…`);
+    try {
+      for (const f of images) {
+        const name = await uploadFile(project, f);
+        section.images.push({ file: name });
+        project.cover ||= name;
+        project.thumbnail ||= name;
+      }
+      changed();
+    } catch (error) {
+      setStatus(`Upload failed: ${error.message}`, "error");
+    }
+  }
+
+  async function moveImage(project, section, img, target) {
+    const copy = (file) => post("/api/copy", JSON.stringify({ from: project.slug, to: target.slug, file })).then((r) => r.file);
+    try {
+      const moved = { ...img, file: await copy(img.file) };
+      if (img.compare) moved.compare = await copy(img.compare);
+      if (!target.sections.length) target.sections.push({ images: [] });
+      target.sections.at(-1).images.push(moved);
+      target.cover ||= moved.file;
+      target.thumbnail ||= moved.file;
+      const hero = data.site.hero[0];
+      if (hero.project === project.slug && hero.image === img.file) data.site.hero = [{ project: target.slug, image: moved.file }];
+      section.images.splice(section.images.indexOf(img), 1);
+      changed();
+    } catch (error) {
+      setStatus(`Move failed: ${error.message}`, "error");
+    }
+  }
+
+  function tile(project, section, img) {
+    const hero = data.site.hero[0];
+    const node = el("div", { className: "tile", title: img.compare ? `${img.file} + ${img.compare}` : img.file });
+    node.classList.toggle("is-banner", project.cover === img.file);
+    node.classList.toggle("is-tile", project.thumbnail === img.file);
+    node.classList.toggle("is-header", hero.project === project.slug && hero.image === img.file);
+    node.classList.toggle("is-paired", Boolean(img.compare));
+    node.classList.toggle("is-side", Boolean(img.beside));
+    node.classList.toggle("is-split", Boolean(img.split));
+    node.classList.toggle("is-section", (section.thumbnail || section.images[0]?.file) === img.file);
+
+    const grab = el("div", { className: "grab" }, image(project.slug, img.file));
+    const remove = button("✕", "remove", () => {
+      section.images.splice(section.images.indexOf(img), 1);
+      changed();
+    });
+    remove.title = "Remove image";
+    remove.setAttribute("aria-label", "Remove image");
+    const pair = button(img.compare ? "Unpair" : "Pair", "set-pair", () => {
+      const at = section.images.indexOf(img);
+      if (img.compare) {
+        section.images.splice(at + 1, 0, { file: img.compare });
+        delete img.compare;
+        delete img.labels;
+      } else {
+        const next = section.images[at + 1];
+        if (!next) { alert("Pair joins an image to the one after it, so put the matching shot next."); return; }
+        img.compare = next.file;
+        section.images.splice(at + 1, 1);
+      }
+      changed();
+    });
+    pair.title = "Make a drag slider between this image and the next one";
+    const side = button("Side", "set-side", () => {
+      if (!img.beside && !section.images[section.images.indexOf(img) + 1]) {
+        alert("Side sits an image next to the one after it, so put the other shot next.");
+        return;
+      }
+      if (img.beside) delete img.beside; else img.beside = true;
+      changed();
+    });
+    side.title = "Show this image next to the following one";
+    const split = button("Split", "set-split", () => {
+      if (img.split) delete img.split; else img.split = 3;
+      changed();
+    });
+    split.title = "On phones, cut this sheet into three images, one after another";
+
+    const extra = el("div", { className: "extra" });
+    const caption = el("input", { placeholder: "Caption", value: img.caption || "" });
+    caption.setAttribute("aria-label", "Caption");
+    caption.addEventListener("input", () => {
+      if (caption.value) img.caption = caption.value; else delete img.caption;
+      touched();
+    });
+    extra.append(caption);
+
+    if (img.compare) {
+      [0, 1].forEach((i) => {
+        const placeholder = i ? "Second version name" : "First version name";
+        const label = el("input", { placeholder, value: (img.labels || [])[i] || "" });
+        label.setAttribute("aria-label", placeholder);
+        label.addEventListener("input", () => {
+          img.labels ||= ["", ""];
+          img.labels[i] = label.value;
+          touched();
+        });
+        extra.append(label);
+      });
+    }
+
+    const moveTo = el("select");
+    moveTo.setAttribute("aria-label", "Move image to another project");
+    moveTo.add(new Option("Move to project…", ""));
+    data.projects.filter((p) => p !== project).forEach((p) => moveTo.add(new Option(p.title, p.slug)));
+    moveTo.addEventListener("change", () => moveImage(project, section, img, data.projects.find((p) => p.slug === moveTo.value)));
+    extra.append(moveTo);
+
+    node.append(
+      grab,
+      el("div", { className: "actions" },
+        withPreview(button("Tile", "set-tile", () => { project.thumbnail = img.file; changed(); }),
+          "tile", "As its tile on the Environments page", project.title, project.slug, img.file),
+        withPreview(button("Banner", "set-banner", () => { project.cover = img.file; changed(); }),
+          "banner", "As the banner on this project's page", project.title, project.slug, img.file),
+        withPreview(button("Header", "set-header", () => { data.site.hero = [{ project: project.slug, image: img.file }]; changed(); }),
+          "banner", "As the home page header", data.site.name, project.slug, img.file),
+        ...(project.sections.length > 1 ? [withPreview(button("Section", "set-section", () => { section.thumbnail = img.file; changed(); }),
+          "banner", "As this section's thumbnail and banner", section.title || project.title, project.slug, img.file)] : []),
+        pair,
+        side,
+        split,
+        remove),
+      extra
+    );
+
+    const sameProject = (d) => d.type === "image" && d.project === project;
+    draggable(grab, { type: "image", project, section, img }, node);
+    dropTarget(node, sameProject, true, (after) => move(dragged.section.images, dragged.img, section.images, img, after));
+    return node;
+  }
+
+  function sectionToggle(project) {
+    const box = el("input", { type: "checkbox", checked: Boolean(project.section_pages) });
+    box.addEventListener("change", () => {
+      if (box.checked) project.section_pages = true; else delete project.section_pages;
+      changed();
+    });
+    return el("label", { className: "field check" }, box, " Sections open from thumbnails, with left and right arrows");
+  }
+
+  function navToggle(project) {
+    const box = el("input", { type: "checkbox", checked: Boolean(project.nav) });
+    box.addEventListener("change", () => {
+      if (box.checked) project.nav = true; else delete project.nav;
+      changed();
+    });
+    return el("label", { className: "field check" }, box, " Separate page (top bar and home button), not in Environments");
+  }
+
+  function sectionBlock(project, section, index) {
+    const block = el("div", { className: "section-block" });
+    const grip = el("span", { className: "grip", textContent: "⠿", title: "Drag to reorder this section" });
+    const heading = el("strong", { textContent: section.title || `Section ${index + 1}` });
+    const titleField = field(section, "title", "Section title");
+    titleField.querySelector("input").addEventListener("input", (event) => {
+      heading.textContent = event.target.value || `Section ${index + 1}`;
+    });
+    block.append(
+      el("div", { className: "section-head" },
+        grip,
+        heading,
+        button("Remove section", "", () => {
+          if (section.images.length && !confirm(`Remove this section and its ${section.images.length} images?`)) return;
+          project.sections.splice(project.sections.indexOf(section), 1);
+          changed();
+        })),
+      el("div", { className: "fields" },
+        titleField,
+        field(section, "source", "ArtStation link"),
+        field(section, "text", "Section text", { kind: "long" }))
+    );
+
+    const tiles = el("div", { className: "tiles" });
+    section.images.forEach((img) => tiles.append(tile(project, section, img)));
+    const hasFiles = (event) => event.dataTransfer && [...event.dataTransfer.types].includes("Files");
+    tiles.addEventListener("dragover", (event) => {
+      if (hasFiles(event)) { event.preventDefault(); tiles.classList.add("file-over"); return; }
+      if (dragged && dragged.type === "image" && dragged.project === project) { event.preventDefault(); event.stopPropagation(); }
+    });
+    tiles.addEventListener("dragleave", () => tiles.classList.remove("file-over"));
+    tiles.addEventListener("drop", (event) => {
+      tiles.classList.remove("file-over");
+      if (hasFiles(event)) { event.preventDefault(); addImages(project, section, event.dataTransfer.files); return; }
+      if (!dragged || dragged.type !== "image" || dragged.project !== project) return;
+      event.preventDefault();
+      event.stopPropagation();
+      move(dragged.section.images, dragged.img, section.images, null, true);
+    });
+    block.append(tiles);
+
+    const picker = el("input", { type: "file", accept: "image/*", multiple: true });
+    picker.addEventListener("change", () => addImages(project, section, picker.files));
+    block.append(el("div", { className: "section-tools" }, el("label", { className: "pick" }, "Upload images", picker)));
+
+    draggable(grip, { type: "section", project, section }, block);
+    dropTarget(block, (d) => d.type === "section" && d.project === project, false, (after) =>
+      move(project.sections, dragged.section, project.sections, section, after));
+    return block;
+  }
+
+  function projectCard(project, index) {
+    const card = el("div", { className: "project" });
+    const isOpen = open.has(project.slug);
+    const count = project.sections.reduce((n, s) => n + s.images.length, 0);
+
+    const tilePicker = el("input", { type: "file", accept: "image/*" });
+    tilePicker.addEventListener("change", async () => {
+      try {
+        project.thumbnail = await uploadFile(project, tilePicker.files[0]);
+        changed();
+      } catch (error) {
+        setStatus(`Upload failed: ${error.message}`, "error");
+      }
+    });
+
+    const row = el("div", { className: "row" },
+      el("span", { className: "number", textContent: index + 1 }),
+      project.thumbnail || project.cover ? image(project.slug, project.thumbnail || project.cover) : el("img", { alt: "" }),
+      el("span", { className: "name", textContent: project.title || "Untitled project" }),
+      el("span", { className: "meta", textContent: `${count} images` }),
+      el("a", { href: `/work/${project.slug}/index.html`, target: "_blank", rel: "noopener", textContent: "View page" }),
+      button(isOpen ? "Close" : "Open", "", () => {
+        isOpen ? open.delete(project.slug) : open.add(project.slug);
+        render();
+      }),
+      button("Remove", "", () => {
+        if (data.site.hero[0].project === project.slug) {
+          alert("This project holds the header image. Pick a different header first.");
+          return;
+        }
+        if (!confirm(`Remove ${project.title} from the site?`)) return;
+        data.projects.splice(data.projects.indexOf(project), 1);
+        changed();
+      })
+    );
+    card.append(row);
+    draggable(row, { type: "project", project }, card);
+    dropTarget(card, (d) => d.type === "project" && !d.project.nav === !project.nav, false, (after) => move(data.projects, dragged.project, data.projects, project, after));
+
+    if (isOpen) {
+      const details = el("div", { className: "details" });
+      const titleField = field(project, "title", "Title");
+      titleField.querySelector("input").addEventListener("input", (event) => {
+        card.querySelector(".name").textContent = event.target.value || "Untitled project";
+      });
+      details.append(el("div", { className: "fields" },
+        titleField,
+        navToggle(project),
+        sectionToggle(project),
+        field(project, "role", "Role"),
+        field(project, "studio", "Context"),
+        field(project, "tagline", "Search engine description (not shown on the page)", { wide: true }),
+        field(project, "summary", "Description", { kind: "paragraphs" }),
+        field(project, "software", "Tools, separated by commas", { kind: "comma" }),
+        field(project, "video", "YouTube video ID", { placeholder: "e.g. SkKyKDifK6Y" }),
+        field(project, "video_title", "Video title"),
+        rows(project, "credits", "Credits", [["role", "Role"], ["name", "Name"], ["url", "Link (optional)"]]),
+        rows(project, "links", "Links", [["label", "Button text"], ["url", "Link"]]),
+        rows(project, "detail_links", "Detail links", [["label", "Label"], ["text", "Link text"], ["url", "Link"]])
+      ));
+      project.sections.forEach((section, i) => details.append(sectionBlock(project, section, i)));
+      details.append(el("div", { className: "section-tools" },
+        button("Add section", "", () => { project.sections.push({ title: "New section", images: [] }); changed(); }),
+        el("label", { className: "pick" }, "Upload home page tile", tilePicker)
+      ));
+      card.append(details);
+    }
+    return card;
+  }
+
+  function colorFields(s) {
+    s.colors ||= {};
+    const box = el("div", { className: "colors" });
+    COLORS.forEach(([key, label, fallback]) => {
+      const input = el("input", { type: "color", value: s.colors[key] || fallback });
+      input.addEventListener("input", () => { s.colors[key] = input.value; touched(); });
+      box.append(el("label", { className: "field" }, el("span", { textContent: label }), input));
+    });
+    box.append(button("Reset colours", "", () => { s.colors = {}; touched(); renderSite(); }));
+    return box;
+  }
+
+  function fontFields(s) {
+    s.fonts ||= {};
+    return [["heading", "Headings font"], ["body", "Body font"]].map(([key, label]) => {
+      const heading = key === "heading";
+      const grid = el("div", { className: "font-grid" });
+      const current = () => s.fonts[key] || "Archivo";
+      Object.entries(fonts).forEach(([name, font]) => {
+        const sample = el("span", {
+          className: "font-sample",
+          textContent: heading ? s.name : "My work runs from whole playable levels down to the materials inside them.",
+        });
+        sample.style.fontFamily = `"${name}"`;
+        sample.style.fontWeight = heading ? 800 : 400;
+        if (heading) {
+          sample.style.textTransform = "uppercase";
+          if (font.stretch) sample.style.fontStretch = "78%";
+        }
+        const card = el("button", { type: "button", className: "font-card" }, el("small", { textContent: name }), sample);
+        card.classList.toggle("is-picked", name === current());
+        card.setAttribute("aria-pressed", String(name === current()));
+        card.addEventListener("click", () => {
+          s.fonts[key] = name;
+          grid.querySelectorAll(".font-card").forEach((c) => {
+            const on = c === card;
+            c.classList.toggle("is-picked", on);
+            c.setAttribute("aria-pressed", String(on));
+          });
+          touched();
+          renderSite();
+          render();
+        });
+        grid.append(card);
+      });
+      return el("div", { className: "field wide" }, el("span", { textContent: label }), grid);
+    });
+  }
+
+  function loadFontPreviews() {
+    const faces = Object.entries(fonts).flatMap(([name, font]) => ["latin", "latin-ext"].map((subset) =>
+      `@font-face { font-family: "${name}"; src: url("/assets/fonts/${font.file}-${subset}.woff2"); unicode-range: ${subset === "latin" ? "U+0000-00FF, U+2000-206F, U+2122" : "U+0100-02FF"}; font-weight: 100 900; ${font.stretch ? `font-stretch: ${font.stretch};` : ""} }`));
+    document.head.append(el("style", { textContent: faces.join("\n") }));
+  }
+
+  function doorEditor(key, label, projects) {
+    const environment = data.projects.filter((p) => !p.nav);
+    const fallback = key === "environment" ? environment[0] : data.projects.find((p) => p.slug === key);
+    const chosen = (data.site.doors || {})[key] || { project: fallback?.slug, image: fallback?.cover };
+    const preview = el("div");
+    const show = (slug, file) => preview.replaceChildren(look("door", label, slug, file));
+    if (chosen.project && chosen.image) show(chosen.project, chosen.image);
+
+    const picks = el("div", { className: "picks" });
+    for (const p of projects) {
+      for (const section of p.sections) {
+        for (const img of section.images) {
+          const pick = el("button", { type: "button", className: "pick-image", title: `${p.title}: ${img.file}` }, image(p.slug, img.file));
+          pick.setAttribute("aria-label", `Use ${img.file} for the ${label} button`);
+          pick.classList.toggle("is-picked", chosen.project === p.slug && chosen.image === img.file);
+          pick.addEventListener("mouseenter", () => show(p.slug, img.file));
+          pick.addEventListener("mouseleave", () => show(chosen.project, chosen.image));
+          pick.addEventListener("click", () => {
+            data.site.doors ||= {};
+            data.site.doors[key] = { project: p.slug, image: img.file };
+            changed();
+          });
+          picks.append(pick);
+        }
+      }
+    }
+    return el("div", { className: "door-edit" }, el("strong", { textContent: label }),
+      el("div", { className: "door-edit-grid" }, preview, picks));
+  }
+
+  function renderDoors() {
+    const environment = data.projects.filter((p) => !p.nav);
+    const own = data.projects.filter((p) => p.nav).map((p) => doorEditor(p.slug, p.title, [p]));
+    document.getElementById("doors").replaceChildren(
+      ...(environment.length ? [doorEditor("environment", "Environments", environment)] : []), ...own);
+  }
+
+  function sizeFields(s) {
+    s.sizes ||= {};
+    const box = el("div", { className: "sizes" });
+    const roles = [["title", "Titles", 84], ["heading", "Headings", 52], ["body", "Body text", 17], ["small", "Small text", 15]];
+    roles.forEach(([key, label, base]) => {
+      const heading = key === "title" || key === "heading";
+      const value = s.sizes[key] || 100;
+      const slider = el("input", { type: "range", min: 70, max: 130, step: 5, value });
+      slider.setAttribute("aria-label", `${label} size`);
+      const amount = el("span", { className: "size-amount" });
+      const sample = el("div", { className: "size-sample", textContent: label });
+      sample.style.fontFamily = `"${(s.fonts || {})[heading ? "heading" : "body"] || "Archivo"}"`;
+      sample.style.fontWeight = heading ? 800 : 400;
+      if (heading) sample.style.textTransform = "uppercase";
+      const show = () => {
+        amount.textContent = `${slider.value}%`;
+        sample.style.fontSize = `${base * slider.value / 100}px`;
+      };
+      slider.addEventListener("input", () => { s.sizes[key] = Number(slider.value); show(); touched(); });
+      show();
+      box.append(el("div", { className: "size-row" }, el("span", { textContent: label }), slider, amount, sample));
+    });
+    box.append(button("Reset sizes", "", () => { s.sizes = {}; touched(); renderSite(); }));
+    return box;
+  }
+
+  function renderSite() {
+    const s = data.site;
+    document.getElementById("site").replaceChildren(
+      colorFields(s),
+      ...fontFields(s),
+      sizeFields(s),
+      field(s, "name", "Name"),
+      field(s, "title", "Job title"),
+      field(s, "artstation", "ArtStation link"),
+      field(s, "email", "Email"),
+      field(s, "statement", "One-line statement", { wide: true }),
+      field(s, "about", "About text", { kind: "paragraphs" }),
+      field(s, "tools", "Tools, separated by commas", { kind: "comma" }),
+      rows(s, "experience", "Experience", [["name", "Studio or place"], ["years", "Years"], ["detail", "Role or detail"]])
+    );
+  }
+
+  function render() {
+    const hero = data.site.hero[0];
+    document.getElementById("header-preview").src = url(hero.project, hero.image);
+    list.replaceChildren(...data.projects.filter((p) => !p.nav).map(projectCard));
+    pages.replaceChildren(...data.projects.filter((p) => p.nav).map(projectCard));
+    renderDoors();
+    document.getElementById("hover-preview").hidden = true;
+  }
+
+  // Empty rows and optional fields would otherwise publish as blanks.
+  function clean() {
+    data.site.experience = data.site.experience.filter((x) => x.name);
+    for (const p of data.projects) {
+      p.credits = (p.credits || []).filter((c) => c.name);
+      p.links = (p.links || []).filter((l) => l.url);
+      p.detail_links = (p.detail_links || []).filter((l) => l.url);
+      if (!p.detail_links.length) delete p.detail_links;
+      if (!p.credits.length) delete p.credits;
+      if (!p.links.length) delete p.links;
+      if (!p.video) { delete p.video; delete p.video_title; }
+    }
+  }
+
+  function problem() {
+    for (const p of data.projects) {
+      if (!p.title.trim()) return "Every project needs a title";
+      if (!p.cover) return `Add an image to ${p.title} before saving`;
+    }
+    return "";
+  }
+
+  document.getElementById("add-project").addEventListener("click", () => {
+    const title = prompt("Project title")?.trim();
+    if (!title) return;
+    let slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "project";
+    const base = slug;
+    for (let n = 2; data.projects.some((p) => p.slug === slug); n++) slug = `${base}-${n}`;
+    data.projects.push({
+      slug, title, tagline: "", role: "", studio: "",
+      summary: [], software: [], cover: "", thumbnail: "", sections: [{ images: [] }],
+    });
+    open.add(slug);
+    changed();
+    list.lastChild.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  saveButton.addEventListener("click", async () => {
+    const issue = problem();
+    if (issue) { setStatus(issue, "error"); return; }
+    saveButton.disabled = true;
+    setStatus("Saving and rebuilding…");
+    try {
+      clean();
+      const saved = await post("/api/save", JSON.stringify(data), { "X-Content-Version": version });
+      version = saved.version;
+      dirty = false;
+      setStatus("Saved. Site rebuilt.");
+      renderSite();
+      render();
+    } catch (error) {
+      saveButton.disabled = false;
+      setStatus(`Not saved: ${error.message}`, "error");
+    }
+  });
+
+  addEventListener("beforeunload", (event) => { if (dirty) event.preventDefault(); });
+
+  Promise.all([fetch("/api/version", { cache: "no-store" }), fetch("/content/projects.json", { cache: "no-store" }), fetch("/assets/fonts/fonts.json", { cache: "no-store" })])
+    .then((responses) => Promise.all(responses.map((r) => r.json())))
+    .then(([current, json, catalog]) => { version = current.version; data = json; fonts = catalog; loadFontPreviews(); setStatus("No changes"); renderSite(); render(); })
+    .catch((error) => setStatus(`Could not load: ${error.message}`, "error"));
+</script>
+</body>
+</html>
