@@ -310,7 +310,8 @@
               "file": "crabtank-02.jpg"
             },
             {
-              "file": "crabtank-04.jpg"
+              "file": "crabtank-04.jpg",
+              "compare": "highresscreenshot00110.png"
             },
             {
               "file": "crabtank-01.jpg"
