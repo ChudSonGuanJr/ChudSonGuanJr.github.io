@@ -5,7 +5,7 @@
     "title": "Environment Artist",
     "statement": "",
     "artstation": "https://www.artstation.com/kingguan",
-    "email": "",
+    "email": "callumbeadle2@gmail.com",
     "hero": [
       {
         "project": "omen",
@@ -13,9 +13,9 @@
       }
     ],
     "about": [
-      "Currently at SludgePipeGames, the indie studio behind Sparedevil, where I look after head and quality control the level environment art.",
-      "Before that I worked at Digital Salmon on real-time projects, from a stylised internal game to a UE5 vehicle experience for Ford™, where I first led a modelling team and helped build its pipeline.",
-      "My work runs from whole playable levels down to the tileable materials inside them, and I enjoy building kits that let a team move fast without losing a consistent style."
+      "Currently at SludgePipeGames, the indie studio behind Sparedevil, where I head quality control of the levels environment art and level design.",
+      "Before that I worked at Digital Salmon across a variety of real-time projects, covering a stylised internal game to a UE5 vehicle experience for Ford™, where I first experienced leading a 3D modelling team, helping build its pipeline and ensure quality control was met.",
+      "My work runs from designing entire playable levels down to the details and materials inside them, to crafting unique hero assets and building kits that allow a team to move fast through large scale projects without losing a consistent style."
     ],
     "experience": [
       {
@@ -24,18 +24,24 @@
         "years": "Present"
       },
       {
+        "name": "Freelance",
+        "detail": "3D Environment Artist",
+        "years": "Present"
+      },
+      {
         "name": "Digital Salmon",
-        "detail": "Environment Artist. Art direction on Darkest Fayte, modelling team lead on Ford Explorer™",
-        "years": "From 2021"
+        "detail": "Environment Artist. Art direction on internal game projects, modelling team lead on Ford Explorer™",
+        "years": "2021 - 2024"
       },
       {
         "name": "Freelance",
         "detail": "Materials for student projects",
-        "years": "2019–2020"
+        "years": "2019 – 2020"
       },
       {
         "name": "University of Hertfordshire",
-        "detail": "Anura and OMEN university projects"
+        "detail": "Anura and OMEN university projects",
+        "years": "2019 - 2021"
       }
     ],
     "tools": [
