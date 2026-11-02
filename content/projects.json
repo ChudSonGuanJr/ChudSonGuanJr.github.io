@@ -320,6 +320,11 @@
               "file": "crabtank-03.jpg"
             },
             {
+              "file": "highresscreenshot00111.png",
+              "compare": "highresscreenshot00112.png",
+              "caption": "Base architectural asset kit / Wireframe"
+            },
+            {
               "file": "crabtank-05.jpg"
             }
           ]
